@@ -11,10 +11,9 @@ from random import choice
 import time
 
 me = "lyraj@lavabit.com"
-you = "clanofdragon@gmail.com"
 
 username = "lyraj"
-password = "null"
+password = input('Enter password:')
 
 text1 = "Witaj!\nWybraliśmy Twojego partnera korespondencyjnego, jest nim "
 text2 = "\nW razie jakichkolwiek problemów piszcie na ten mail. Bawcie się dobrze!\n\nLyra"
@@ -37,6 +36,7 @@ html2 = """\
 conn = smtplib.SMTP('lavabit.com')
 conn.login(username, password)
 
+
 plik = open("/home/jacob/maile", "r")
 maile = []
 for line in plik:
@@ -47,16 +47,21 @@ print(maile)
 msg = MIMEMultipart('alternative')
 msg['Subject'] = "Twój partner korespondencyjny"
 msg['From'] = "lyraj@lavabit.com"
-msg['To'] = you
-
-part1 = MIMEText(text1 + you + text2, 'plain')
-part2 = MIMEText(html1 + you + " " + html2, 'html')
 
 while maile: 
-    user1 = choice(maile)
+    user1 = ''
+    user2 = ''
+    while (user1 == user2 or (user1.split(sep=' ')[1] == user2.split(sep=' ')[1])):
+        user1 = choice(maile)
+        user2 = choice(maile)
+    
     maile.remove(user1)
-    user2 = choice(maile)
     maile.remove(user2)
+    
+    user1 = user1.split(sep=' ')[0]
+    user2 = user2.split(sep=' ')[0]
+
+    
     print("%s <-> %s" %(user1, user2))
     
     msg['To'] = user1
@@ -66,6 +71,7 @@ while maile:
     msg.attach(part2a)
     try: 
         conn.sendmail(me, user1, msg.as_string())
+        pass
     finally: 
         print("%s sent" %user1)
     time.sleep(5)
@@ -78,6 +84,7 @@ while maile:
     msg.attach(part2b)
     try:
         conn.sendmail(me, user2, msg.as_string())
+        pass
     finally: 
         print("%s sent" %user2)
     time.sleep(5)
