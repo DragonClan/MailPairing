@@ -1,0 +1,1 @@
+Losowanie v.1
